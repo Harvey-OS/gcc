@@ -121,7 +121,12 @@ struct pex_funcs
 		      int /* toclose */, const char **/* errmsg */,
 		      int */* err */);
   /* Close a descriptor.  Return 0 on success, -1 on error.  */
+#ifdef HARVEY
+  /* avoiding interferences with unistd.h macros */
+  int (*alt_close) (struct pex_obj *, int);
+#else
   int (*close) (struct pex_obj *, int);
+#endif
   /* Wait for a child to complete, returning exit status in *STATUS
      and time in *TIME (if it is not null).  CHILD is from fork.  DONE
      is 1 if this is called via pex_free.  ERRMSG and ERR are as in
@@ -132,7 +137,11 @@ struct pex_funcs
   /* Create a pipe (only called if PEX_USE_PIPES is set) storing two
      descriptors in P[0] and P[1].  If BINARY is non-zero, open in
      binary mode.  Return 0 on success, -1 on error.  */
+#ifdef HARVEY
+  int (*alt_pipe) (struct pex_obj *, int * /* p */, int /* binary */);
+#else
   int (*pipe) (struct pex_obj *, int * /* p */, int /* binary */);
+#endif
   /* Get a FILE pointer to read from a file descriptor (only called if
      PEX_USE_PIPES is set).  If BINARY is non-zero, open in binary
      mode.  Return pointer on success, NULL on error.  */

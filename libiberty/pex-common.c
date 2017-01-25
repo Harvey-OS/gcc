@@ -253,7 +253,12 @@ pex_run_in_environment (struct pex_obj *obj, int flags, const char *executable,
     }
   else
     {
+#ifdef HARVEY
+      /* see pex-common.h */
+      if (obj->funcs->alt_pipe (obj, p, (flags & PEX_BINARY_OUTPUT) != 0) < 0)
+#else
       if (obj->funcs->pipe (obj, p, (flags & PEX_BINARY_OUTPUT) != 0) < 0)
+#endif
 	{
 	  *err = errno;
 	  errmsg = "pipe";
@@ -302,7 +307,11 @@ pex_run_in_environment (struct pex_obj *obj, int flags, const char *executable,
     {
       if (flags & PEX_STDERR_TO_PIPE)
 	{
-	  if (obj->funcs->pipe (obj, p, (flags & PEX_BINARY_ERROR) != 0) < 0)
+#ifdef HARVEY
+    if (obj->funcs->alt_pipe (obj, p, (flags & PEX_BINARY_ERROR) != 0) < 0)
+#else
+    if (obj->funcs->pipe (obj, p, (flags & PEX_BINARY_ERROR) != 0) < 0)
+#endif
 	    {
 	      *err = errno;
 	      errmsg = "pipe";
@@ -350,6 +359,18 @@ pex_run_in_environment (struct pex_obj *obj, int flags, const char *executable,
 
   return NULL;
 
+#ifdef HARVEY
+  error_exit:
+  if (in >= 0 && in != STDIN_FILE_NO)
+    obj->funcs->alt_close (obj, in);
+  if (out >= 0 && out != STDOUT_FILE_NO)
+    obj->funcs->alt_close (obj, out);
+  if (errdes >= 0 && errdes != STDERR_FILE_NO)
+    obj->funcs->alt_close (obj, errdes);
+  if (outname_allocated)
+    free (outname);
+  return errmsg;
+#else
  error_exit:
   if (in >= 0 && in != STDIN_FILE_NO)
     obj->funcs->close (obj, in);
@@ -360,6 +381,7 @@ pex_run_in_environment (struct pex_obj *obj, int flags, const char *executable,
   if (outname_allocated)
     free (outname);
   return errmsg;
+#endif
 }
 
 /* Run a program.  */
@@ -432,17 +454,29 @@ pex_input_pipe (struct pex_obj *obj, int binary)
       || obj->next_input_name)
     goto usage_error;
 
+#ifdef HARVEY
+  if (obj->funcs->alt_pipe (obj, p, binary != 0) < 0)
+#else
   if (obj->funcs->pipe (obj, p, binary != 0) < 0)
+#endif
     return NULL;
 
   f = obj->funcs->fdopenw (obj, p[WRITE_PORT], binary != 0);
   if (! f)
     {
+#ifdef HARVEY
+      int saved_errno = errno;
+      obj->funcs->alt_close (obj, p[READ_PORT]);
+      obj->funcs->alt_close (obj, p[WRITE_PORT]);
+      errno = saved_errno;
+      return NULL;
+#else
       int saved_errno = errno;
       obj->funcs->close (obj, p[READ_PORT]);
       obj->funcs->close (obj, p[WRITE_PORT]);
       errno = saved_errno;
       return NULL;
+#endif
     }
 
   obj->next_input = p[READ_PORT];
@@ -601,10 +635,17 @@ pex_free (struct pex_obj *obj)
   /* Close pipe file descriptors corresponding to child's stdout and
      stderr so that the child does not hang trying to output something
      while we're waiting for it.  */
+#ifdef HARVEY
+  if (obj->next_input >= 0 && obj->next_input != STDIN_FILE_NO)
+    obj->funcs->alt_close (obj, obj->next_input);
+  if (obj->stderr_pipe >= 0 && obj->stderr_pipe != STDIN_FILE_NO)
+    obj->funcs->alt_close (obj, obj->stderr_pipe);
+#else
   if (obj->next_input >= 0 && obj->next_input != STDIN_FILE_NO)
     obj->funcs->close (obj, obj->next_input);
   if (obj->stderr_pipe >= 0 && obj->stderr_pipe != STDIN_FILE_NO)
     obj->funcs->close (obj, obj->stderr_pipe);
+#endif
   if (obj->read_output != NULL)
     fclose (obj->read_output);
   if (obj->read_err != NULL)

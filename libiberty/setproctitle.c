@@ -22,7 +22,9 @@ Boston, MA 02110-1301, USA.  */
 #endif
 #ifdef HAVE_SYS_PRCTL_H
 #include <sys/types.h>
+# ifndef HARVEY
 #include <sys/prctl.h>
+# endif
 #endif
 #include "ansidecl.h"
 

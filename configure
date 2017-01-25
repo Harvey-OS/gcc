@@ -3251,6 +3251,9 @@ case "${target}" in
   x86_64-*-mingw*)
     noconfigdirs="$noconfigdirs ${libgcj}"
     ;;
+  x86_64-harvey*)
+    noconfigdirs="$noconfigdirs ${libgcj} target-libffi"
+    ;
   mmix-*-*)
     noconfigdirs="$noconfigdirs target-libffi target-boehm-gc"
     ;;

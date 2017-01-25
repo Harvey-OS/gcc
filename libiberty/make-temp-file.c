@@ -34,7 +34,7 @@ Boston, MA 02110-1301, USA.  */
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
-#ifdef HAVE_SYS_FILE_H
+#if !defined(HARVEY) && defined(HAVE_SYS_FILE_H)
 #include <sys/file.h>   /* May get R_OK, etc. on some systems.  */
 #endif
 #if defined(_WIN32) && !defined(__CYGWIN__)

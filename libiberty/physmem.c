@@ -48,7 +48,7 @@
 # include <sys/param.h>
 #endif
 
-#if HAVE_SYS_SYSCTL_H
+#if !defined(HARVEY) && defined(HAVE_SYS_SYSCTL_H)
 # include <sys/sysctl.h>
 #endif
 

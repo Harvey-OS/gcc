@@ -1340,6 +1340,21 @@ x86_64-*-linux* | x86_64-*-kfreebsd*-gnu | x86_64-*-knetbsd*-gnu)
 	done
 	TM_MULTILIB_CONFIG=`echo $TM_MULTILIB_CONFIG | sed 's/^,//'`
 	;;
+x86_64-harvey*)
+        tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h gnu-user.h \
+                i386/x86-64.h i386/gnu-user64.h harvey.h i386/harvey64.h"
+        extra_options="${extra_options} harvey.opt"
+        case ${enable_threads} in
+        no)
+                tm_file="${tm_file} harvey-nthr.h"
+                ;;
+        "" | yes | posix)
+                thread_file='posix'
+                ;;
+        esac
+        gas=yes
+        use_collect2=yes
+        ;;
 i[34567]86-pc-msdosdjgpp*)
 	xm_file=i386/xm-djgpp.h
 	tm_file="dbxcoff.h ${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/djgpp.h i386/djgpp-stdint.h"

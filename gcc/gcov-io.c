@@ -28,6 +28,10 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /* Routines declared in gcov-io.h.  This file should be #included by
    another source file, after having #included gcov-io.h.  */
 
+#ifdef HARVEY
+#include <fcntl.h>
+#endif
+
 #if !IN_GCOV
 static void gcov_write_block (unsigned);
 static gcov_unsigned_t *gcov_write_words (unsigned);

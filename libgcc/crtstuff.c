@@ -69,7 +69,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 # define FORCE_CODE_SECTION_ALIGN
 #endif
 
-#ifndef CRT_CALL_STATIC_FUNCTION
+#if defined(HARVEY) || !defined(CRT_CALL_STATIC_FUNCTION)
 # define CRT_CALL_STATIC_FUNCTION(SECTION_OP, FUNC)	\
 static void __attribute__((__used__))			\
 call_ ## FUNC (void)					\

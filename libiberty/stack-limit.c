@@ -39,6 +39,9 @@ Attempt to increase stack size limit to @var{pref} bytes if possible.
 #include <stdint.h>
 #endif
 #ifdef HAVE_SYS_RESOURCE_H
+# ifdef HARVEY
+# include <sys/time.h> /* For <sys/resource.h> */
+# endif
 #include <sys/resource.h>
 #endif
 

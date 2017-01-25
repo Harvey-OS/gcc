@@ -112,7 +112,7 @@
 #include <string.h>
 #endif
 
-#ifdef HAVE_ALLOCA_H
+#if !defined (HARVEY) && defined(HAVE_ALLOCA_H)
 # include <alloca.h>
 #else
 # ifndef alloca

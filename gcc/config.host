@@ -257,6 +257,8 @@ case ${host} in
     out_host_hook_obj=host-mingw32.o
     host_lto_plugin_soname=liblto_plugin-0.dll
     ;;
+  x86_64-harvey*)
+    ;;
   i[34567]86-*-uwin*)
     echo "*** UWIN may not be used as a host platform because"
     echo "*** linking with posix.dll is not allowed by the GNU GPL."

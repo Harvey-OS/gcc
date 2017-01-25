@@ -459,17 +459,20 @@ clause_done:
 	if ((ugo[2] || honor_umask) && !rwxXstugo[8])
 	  file_mode = (file_mode & ~(S_IROTH | S_IWOTH | S_IXOTH))
 		      | (new_mode & (S_IROTH | S_IWOTH | S_IXOTH));
+#if !defined(Plan9) && !defined(HARVEY)
+/* Check owner in private namespaces? ha! */
 	if (is_dir && rwxXstugo[5])
 	  file_mode |= S_ISVTX;
 	else if (!is_dir)
 	  file_mode &= ~S_ISVTX;
+#endif
 #endif
       }
     else if (set_mode == 2)
       {
 	/* Clear '-'.  */
 	file_mode &= ~new_mode;
-#ifndef __MINGW32__
+#if !defined(__MINGW32__) && !defined(HARVEY)
 	if (rwxXstugo[5] || !is_dir)
 	  file_mode &= ~S_ISVTX;
 #endif
@@ -477,7 +480,7 @@ clause_done:
     else if (set_mode == 3)
       {
 	file_mode |= new_mode;
-#ifndef __MINGW32__
+#if !defined (__MINGW32__) && !defined(HARVEY)
 	if (rwxXstugo[5] && is_dir)
 	  file_mode |= S_ISVTX;
 	else if (!is_dir)

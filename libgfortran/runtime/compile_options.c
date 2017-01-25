@@ -85,7 +85,7 @@ show_signal (int signum)
 	break;
 #endif
 
-#if defined(SIGTRAP)
+#if defined(SIGTRAP) && !defined(HARVEY)
       case SIGTRAP:
 	name = "SIGTRAP";
 	desc = "Trace/breakpoint trap";

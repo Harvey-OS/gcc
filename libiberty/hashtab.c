@@ -44,7 +44,7 @@ Boston, MA 02110-1301, USA.  */
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
-#ifdef HAVE_MALLOC_H
+#if !defined(HARVEY) && defined(HAVE_MALLOC_H)
 #include <malloc.h>
 #endif
 #ifdef HAVE_LIMITS_H

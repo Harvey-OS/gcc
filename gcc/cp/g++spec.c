@@ -326,8 +326,15 @@ lang_specific_driver (struct cl_decoded_option **in_decoded_options,
 		       CL_DRIVER, &new_decoded_options[j]);
       added_libraries++;
       j++;
-      /* Add target-dependent static library, if necessary.  */
-      if ((static_link || library > 1) && LIBSTDCXX_STATIC != NULL)
+      /* 
+       * Add target-dependent static library, if necessary. 
+       * Always for Harvey.
+       */
+      if (
+#ifndef HARVEY
+          (static_link || library > 1) && 
+#endif
+         LIBSTDCXX_STATIC != NULL)
 	{
 	  generate_option (OPT_l, LIBSTDCXX_STATIC, 1,
 			   CL_DRIVER, &new_decoded_options[j]);

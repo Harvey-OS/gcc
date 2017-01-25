@@ -1272,6 +1272,14 @@ EOF
 	fi
 	echo ${UNAME_MACHINE}-unknown-plan9
 	exit ;;
+    *:Harvey:*:*)
+        if test "$cputype" = "amd64"; then
+            UNAME_MACHINE=x86_64
+        else
+            UNAME_MACHINE="$cputype"
+        fi
+        echo ${UNAME_MACHINE}-unknown-harvey
+        exit ;;
     *:TOPS-10:*:*)
 	echo pdp10-unknown-tops10
 	exit ;;

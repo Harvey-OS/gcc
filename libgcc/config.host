@@ -654,6 +654,14 @@ ia64*-*-freebsd*)
 	extra_parts="$extra_parts crtfastmath.o"
 	tmake_file="$tmake_file ia64/t-ia64 ia64/t-ia64-elf ia64/t-eh-ia64 t-crtfm"
 	;;
+x86_64-harvey*)             # Harvey-OS 64
+        tmake_eh_file="i386/t-dw2-eh"
+        case ${target_thread_file} in
+          posix)
+            tmake_file="${tmake_file} ${tmake_eh_file} t-harvey-thread"
+          ;;   
+        esac 
+        ;;
 ia64*-*-linux*)
 	# Don't use crtbeginT.o from *-*-linux* default.
 	extra_parts="crtbegin.o crtend.o crtbeginS.o crtendS.o crtfastmath.o"
